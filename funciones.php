@@ -23,10 +23,10 @@
 	{
 		echo '<form id = "filtro"action = '.$pagina . ' method = post>';
 		echo '<tr>';
-		echo 'ISBN	:<td><input name = "isbn"  type = "name"/></td>';
+		echo '<p>ISBN	:<td><input name = "isbn"  type = "name"/></td>';
 		echo 'Descripcion	:<td><input name = "descripcion"  type = "name"/></td>';
 		echo '<td><input name = "buscar"  type = "submit" value = "Buscar"/></td></td>';
-		echo '</tr>';
+		echo '</p></tr>';
 		echo '</form>'; 
 	}
 	function consultalibros ($query , $pagina)
@@ -157,8 +157,7 @@
 	}
 	// Listado de libros para vender a los 
 	//clientes muestra los libros que estén 
-	// disponibles en el Almacen y responde si no
-	// queda nigun libro para vender con no quedan libros
+	// disponibles en el Almacen
 	function listadoventa ($query,$pagina,$siguiente)
 	{
 		filtro($pagina);
@@ -285,10 +284,10 @@
 			$row = mysql_fetch_assoc($result);
 			$id = $row['id_persona'];
 		}else if (mysql_num_rows($result) > 1){
-			echo '<h3>Ya existe una persona con esa descripcion</h3>';
+			echo '<h3>Ya existe una persona con esa descripción</h3>';
 		}else if (mysql_num_rows($result) == 0){
 			$id = "?";
-		}else {
+		}else{
 			echo '<a href = "admin.php">Volver<a/>';
 			die ('<h3>No se ha encontrado el ID' . mysql_error(). '</h3>');
 		}
@@ -296,10 +295,7 @@
 	}
 	function confinsert($result)
 	{
-		if ($result){
-			echo 'Insert confirmada';
-			echo '<br/>';
-		}else {
+		if (!$result){
 			echo 'Error	:';
 			echo mysql_error();
 			echo '<br/>';
@@ -374,25 +370,15 @@
 		WHERE isbn = '".$isbn."' AND id_vendedor = '".$idvendedor."' AND estado = 'Almacen';";
 		$result = mysql_query($query);
 		if (!$result){
-			echo '<br/>';
 			die ('No se ha Actualizado la tabla compraventa' .mysql_error());
 		}else{
-			echo 'Cantidad de libros Antes de la venta	:';
-			echo $cantidad;
-			echo '<br/>';
 			$cantidad = $cantidad - 1;						//Añadir una nueva venta en la tabla compraventa de la base de datos
-			echo 'Cantidad de libros despues de la venta	:';
-			echo $cantidad;
-			echo '<br/>';
 			$query = "UPDATE libros SET cantidad = ".$cantidad." 
 			WHERE isbn = '".$isbn."'";
 			$result = mysql_query($query);
 		}
 		if (!$result){
-			echo 'No se ha actualizado la cantidad de libros'.mysql_error();
-			echo '<br/>';
-		}else {
-			echo 'Venta Confirmada';
+			die ('No se ha actualizado la cantidad de libros'.mysql_error());
 		}
 	}
 	function pagar ($idvendedor,$isbn)
@@ -542,7 +528,7 @@
 			}
 		return $repetido;
 	}
-	function identificar($isbn,$idvendedor,$estado)
+	function identificarventa($isbn,$idvendedor,$estado)
 	{
 		$query = "SELECT id_cv FROM compraventa
 		WHERE id_Vendedor = '". $idvendedor ."' AND isbn = '".$isbn."' 
@@ -566,21 +552,125 @@
 		WHERE id_cv ='".$id_cv[0]."'";
 		$result = mysql_query($query);
 		if ($result){
-			echo 'Cantidad de libros Antes de la venta	:';
-			echo $cantidad;
-			echo '<br/>';
 			$cantidad = $cantidad - 1;						//Modificar la cantidad de libros en el almacen
-			echo 'Cantidad de libros despues de la venta	:';
-			echo $cantidad;
-			echo '<br/>';
 			$query = "UPDATE libros SET cantidad = ".$cantidad." 
 			WHERE isbn = '".$isbn."'";
 			$result = mysql_query($query);
 			if (!$result){
-				echo 'Problemas al actualizar los libros' .mysql_error();
+				die ('Problemas al actualizar los libros' .mysql_error());
 			}
-		}else {
-			echo 'Error en la Venta' . mysql_error();
+		}else{
+			die ('Error en la Venta' . mysql_error());
 		}
+	}
+	function pagounico ($id_cv)
+	{
+		$query  = "UPDATE compraventa SET estado = 'Pagado' 
+		WHERE estado = 'Vendido' AND id_cv = '".$id_cv[0]."'";
+		$result = mysql_query($query);
+		confinsert($result);
+	}
+	function fichaID($id)
+	{
+		$query = "SELECT id_persona,nombre,apellido,movil,mail,descripcion,libros.isbn,estado FROM libros,personas,compraventa
+		WHERE libros.isbn = compraventa.isbn AND id_persona = id_vendedor and id_persona = ".$id.";";
+		$result = mysql_query($query);
+		$pos = 0;
+		while ($row = mysql_fetch_assoc($result)){
+			$nombre = $row['nombre'];
+			$apellido = $row['apellido'];
+			$movil = $row['movil'];
+			$correo = $row['mail'];
+			$descripcion[$pos] = $row['descripcion'];
+			$isbn[$pos] = $row['isbn'];
+			$estado[$pos] = $row['estado'];
+			$pos = $pos + 1;
+		}
+		echo '<h3 align = "center">Ficha personal Segunda Mano	 </h3>';
+		echo '<h3>Datos Personales	:</h3>';
+		echo '<br/>';
+		echo '<h4>ID	: ' . $id . '</h4>';
+		echo 'Nombre	: ' . $nombre;
+		echo '<br/>';
+		echo '<br/>';
+		echo 'Apellidos	: ' . $apellido;
+		echo '<br/>';
+		echo '<br/>';
+		echo 'Movil	: ' . $movil;
+		echo '<br/>';
+		echo '<br/>';
+		echo 'Correo	: ' . $correo;
+		echo '<hr/>';
+		echo '<h3>Libros en Depósito	: </h3>';
+		$len = mysql_num_rows($result);
+		echo '<ol>';
+		for ($i = 0 ; $i < $len ; $i++){
+			echo '<li>';
+			echo 'ISBN	: ' . $isbn[$i];
+			echo '<br/>';
+			echo 'Descripcion	: ' . $descripcion[$i];
+			echo '<br/>';
+			echo 'Estado	: ' . $estado[$i];
+			echo '<br/>';
+			echo '<br/>';
+			echo '</li>';
+		}
+		echo '</ol>';
+		echo '<hr/>';	
+		aviso();
+	}
+		function fichaM($movil)
+	{
+		$query = "SELECT id_persona,nombre,apellido,movil,mail,descripcion,libros.isbn,estado FROM libros,personas,compraventa
+		WHERE libros.isbn = compraventa.isbn AND id_persona = id_vendedor and movil = ".$movil.";";
+		$result = mysql_query($query);
+		$pos = 0;
+		while ($row = mysql_fetch_assoc($result)){
+			$id = $row['id_persona'];
+			$nombre = $row['nombre'];
+			$apellido = $row['apellido'];
+			$movil = $row['movil'];
+			$correo = $row['mail'];
+			$descripcion[$pos] = $row['descripcion'];
+			$isbn[$pos] = $row['isbn'];
+			$estado[$pos] = $row['estado'];
+			$pos = $pos + 1;
+		}
+		echo '<h3 align = "center">Ficha personal Segunda Mano	</h3>';
+		echo '<h3>Datos Personales	:</h3>';
+		echo '<h4>ID	: ' . $id . '</h4>';
+		echo 'Nombre	: ' . $nombre;
+		echo '<br/>';
+		echo '<br/>';
+		echo 'Apellidos	: ' . $apellido;
+		echo '<br/>';
+		echo '<br/>';
+		echo 'Movil	: ' . $movil;
+		echo '<br/>';
+		echo '<br/>';
+		echo 'Correo	: ' . $correo;
+		echo '<hr/>';
+		echo '<h3>Libros en Depósito	: </h3>';
+		$len = mysql_num_rows($result);
+		echo '<ol>';
+		for ($i = 0 ; $i < $len ; $i++){
+			echo '<li>';
+			echo 'ISBN	: ' . $isbn[$i];
+			echo '<br/>';
+			echo 'Descripcion	: ' . $descripcion[$i];
+			echo '<br/>';
+			echo 'Estado	: ' . $estado[$i];
+			echo '<br/>';
+			echo '<br/>';
+			echo '</li>';
+		}
+		echo '</ol>';
+		echo '<hr/>';
+		aviso();
+	}
+	function aviso ()
+	{
+		echo '<h3 align = "center">¡¡Aviso Importante!! ¡¡No tirar esta ficha!!</h3>';
+		echo '<h4>La pérdida de esta ficha es responsabilidad del usuario, si no se presenta será mas dificil una buena gestión de sus libros de segunda mano en la libreria, no pudiendo ser pagados o reclamados</h4>';
 	}
 ?>

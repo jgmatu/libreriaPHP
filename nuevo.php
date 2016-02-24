@@ -91,9 +91,6 @@
 					echo 'Redireccionar a compra...';
 				break;
 			}
-echo '<hr/>';
-var_dump($_SESSION);
-echo '<hr/>';
 		?>
 	</body>
 </html>

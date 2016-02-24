@@ -15,7 +15,9 @@
 			th { background-color: #A7FF55; }
 			.odd_row {background-color : #9DFA7B; }
 			.even_row {background-color : #A3F8B3; }
-			h3 { background-color: #FFF; }
+			h3 { color: #A3F8B3; }
+			p { color: #A3F8B3; }
+			a {color: #2EA9FF}
 		</style>
 	</head>
 	<body>
@@ -43,7 +45,7 @@
 		?>
 	</div>
 	<?PHP
-		if (count($_POST) != 0){
+		if (count($_POST) != 0 && !isset($_POST['id'])){
 			if (isset($_POST['Addrow'])){
 				$boton = array_keys($_POST);
 				$index = encontrarboton($boton);				// Confirmacion del libro elegido //
@@ -51,7 +53,11 @@
 				asociarcompra($index);
 				$_SESSION['filas'] = $_SESSION['filas'] + 1;
 			}
-			$id = devolverid($_SESSION['nombre'],$_SESSION['apellido'],$_SESSION['movil'],$_SESSION['mail']);
+			if ($_SESSION['id'] == '?'){					 // Persona duplicada en la base de datos, mismo correo, mismo movil, mismo nombre mismo apellido, con diferente id
+				$id = devolverid($_SESSION['nombre'],$_SESSION['apellido'],$_SESSION['movil'],$_SESSION['mail']);
+			}else {
+				$id = $_SESSION['id'];
+			}
 		}
 	?>
 		<hr/>
@@ -89,6 +95,7 @@
 				break;
 				case isset($_POST['ID']):
 					$_SESSION['nuevo'] = False;
+					$_SESSION['id'] = $_POST['id'];
 					$id = buscarpersonaID($_POST['id']);
 					$_SESSION['estado'] = 3;
 				break;
@@ -101,13 +108,13 @@
 		<hr/>
 		<h4>Persona Asignada a lo Libros</h4>
 		<table name ="persona">
-			<?PHP echo (((isset($_POST['M']) || isset($_POST['ID']))) && $id != "?") ? '<th>ID</th>' : '';// Esta linea solo aparece si se elige persona por ID y por NA?> 
+			<?PHP echo ($id != "?") ? '<th>ID</th>' : '';// Esta linea solo aparece si se elige persona por ID y por NA?> 
 			<th>Nombre</th>
 			<th>Apellido</th>
 			<th>Movil</th>
 			<th>Correo</th>
 			<tr class = "odd_row">
-				<?PHP if ((isset($_POST['M']) || isset($_POST['ID'])) && $id != "?"){ echo '<td>'.$id.'</td>'; }?>
+				<?PHP echo ($id != "?") ? '<td>'.$id.'</td>' : '' ;?>
 				<td><?PHP echo ($_SESSION['nombre'] != "?") ? $_SESSION['nombre'] : 'N/A'?></td>
 				<td><?PHP echo ($_SESSION['apellido'] != "?") ? $_SESSION['apellido'] : 'N/A'?></td>
 				<td><?PHP echo ($_SESSION['movil'] != "?") ? $_SESSION['movil'] : 'N/A'?></td>
@@ -120,7 +127,7 @@
 				case 1:
 					echo '<br/>';
 					echo '<a href = "comprar.php"> Cancelar </a>';
-					echo '<input name = "comprarNP" type = "submit" value = "Imprimir"/>';
+					echo '<input name = "comprarNP" type = "submit" value = "Confirmar"/>';
 					echo '<br/>';
 				break;
 				case 2:
@@ -129,7 +136,7 @@
 					echo '<br/>';
 					if ($id != "?"){
 						echo '<a href = "comprar.php"> Cancelar </a>';
-						echo '<input name = "comprarM" type = "submit" value = "Imprimir"/>';
+						echo '<input name = "comprarM" type = "submit" value = "Confirmar"/>';
 					}else {
 						echo '<a href = "comprar.php"> Cancelar </a>';
 					}
@@ -140,7 +147,7 @@
 					echo '<br/>';
 					if ($id != "?"){
 						echo '<a href = "comprar.php"> Cancelar </a>';
-						echo '<input name = "comprarID" type = "submit" value = "Imprimir"/>';
+						echo '<input name = "comprarID" type = "submit" value = "Confirmar"/>';
 					}else {
 						echo '<a href = "comprar.php"> Cancelar </a>';
 					}

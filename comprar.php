@@ -1,4 +1,3 @@
-
 <html>
 	<head>
 		<title>Compra de Libro</title>
@@ -16,6 +15,9 @@
 				-o-background-size: cover;
 				background-size: cover;
 			} 
+			a{color : #000 ; }
+			h3 {color : #000 ; }
+			p {color : #000 ; }
 		</style>
 	</head>
 	<body>
@@ -30,17 +32,14 @@
 				<td><h2><a href = "admin.php">Administración</a></h2></td>
 			</tr>
 		</table>
-		<h3 align = "center">Nueva compra de Libros</h3>
+		<h3 align = "center">Nuevo depósito de Libros</h3>
 		<?PHP
-			echo 'Filas	Inicializadas	:';
 			if (isset($_SESSION['filas'])){     // Inicializacion de la persona y de filas y nuevo si existe la variable global filas
  				inicializarfilas($_SESSION['filas']);
 				$_SESSION['nuevo'] = False;
 				$_SESSION['filas'] = 0;
-				echo $_SESSION['filas'];
 			}else  {
 				$_SESSION['filas'] = 0;
-				echo $_SESSION['filas'];
 			}
 /*
 echo '<hr/>';

@@ -44,14 +44,8 @@
 			$_SESSION['isbn'] = '?';
 			$_SESSION['descripcion'] = '?';
 			$_SESSION['cantidad'] = -13;
-echo '<hr/>';
-echo '<h3>$_SESSION</h3>';
-var_dump($_SESSION);
-echo '<br/>';
-echo '<h3>$_POST</h3>';
-var_dump($_POST);
-echo '<hr/>';
 		?>
+	<h3 align = "center">Rellenar un único formulario de color</h3>
 	<div id = "container">
 	<hr/>
 	<h3>Asociar Persona por ID:</h3>

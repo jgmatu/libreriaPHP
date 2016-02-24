@@ -19,14 +19,14 @@
 	</head>
 	<body background = "libroo.jpeg">
 		<div id = "content">
-			<table id = "tabhead" align = "center" border = "1">
-				<tr>
-					<td><h2><a href = "index.php">Inicio</a></h2></td>
-					<td><h2><a href = "https://maps.google.es/maps?bav=on.2,or.r_qf.&bvm=bv.69620078,d.ZGU,pv.xjs.s.es.Vq9uElIHUwM.O&biw=1112&bih=710&dpr=1&q=cuesta+de+san+francisco+las+rozas&um=1&ie=UTF-8&hq=&hnear=0xd41837c20956dcf:0x8a4a35a8ff1040be,Calle+Cuesta+San+Francisco,+28231+Las+Rozas,+Madrid&gl=es&sa=X&ei=BNOpU8C4C6qS7AbfjICYDw&ved=0CCQQ8gEwAA">Donde Estamos<a/></h2></td>
-					<td><h2><a href = "admin.php">Administración</a></h2></td>
-				</tr>
-			</table>
-			<h3>Busqueda de Venta</h3>
+		<table id = "tabhead" align = "center" border = "1">
+			<tr>
+				<td><h2><a href = "index.php">Inicio</a></h2></td>
+				<td><h2><a href = "https://maps.google.es/maps?bav=on.2,or.r_qf.&bvm=bv.69620078,d.ZGU,pv.xjs.s.es.Vq9uElIHUwM.O&biw=1112&bih=710&dpr=1&q=cuesta+de+san+francisco+las+rozas&um=1&ie=UTF-8&hq=&hnear=0xd41837c20956dcf:0x8a4a35a8ff1040be,Calle+Cuesta+San+Francisco,+28231+Las+Rozas,+Madrid&gl=es&sa=X&ei=BNOpU8C4C6qS7AbfjICYDw&ved=0CCQQ8gEwAA">Donde Estamos<a/></h2></td>
+				<td><h2><a href = "admin.php">Administración</a></h2></td>
+			</tr>
+		</table>
+		<h3>Busqueda de Venta</h3>
 		<?PHP
 			require 'funciones.php';
 /*
@@ -55,14 +55,14 @@ echo '<br/>';
 			}
 		}
 		?>
-			</table>
-			<h3>Listado de Venta</h3>
-			<table name = "libros">
-			<th>ID</th>
-			<th>Nombre</th>
-			<th>Apellido</th>
-			<th>ISBN</th>
-			<th>Descripción</th>
+		</table>
+		<h3>Listado de Venta</h3>
+		<table name = "libros">
+		<th>ID</th>
+		<th>Nombre</th>
+		<th>Apellido</th>
+		<th>ISBN</th>
+		<th>Descripción</th>
 		<?PHP
 			
 			$odd = true;
@@ -94,7 +94,7 @@ echo '<br/>';
 			}
 			if (!isbnrepetido($_SESSION['isbn' . $pos])){  		// Arreglar problema de Inidices
 				echo '<form action = "imprimir.php" method = "post">';
-				echo '<input name = "vender" type = "submit" value ="Imprimir"/>';
+				echo '<input name = "vender" type = "submit" value ="Confirmar"/>';
 				echo '<a href = "admin.php">Volver</a>';
 				echo '</form>';
 			}else {
