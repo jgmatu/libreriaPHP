@@ -67,7 +67,6 @@ echo '<br/>';
 			
 			$odd = true;
 			$pos = 0;
-			$break = false;
 			while ($pos != $_SESSION['filas'] && !isbnrepetido($_SESSION['isbn' . $pos])) {
 				echo ($odd == true) ? '<tr class = "odd_row">' : '<tr class = "even_row">';   // Filas del listado de la venta de Segundamano	
 				$odd = !$odd;
