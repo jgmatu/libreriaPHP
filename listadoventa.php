@@ -37,23 +37,25 @@ echo '<h3>$_POST</h3>';
 echo '<br/>';
 var_dump($_POST);
 echo '<br/>';
-*/
-			conexion($_SESSION['user'],$_SESSION['pass']);
+*/			conexion($_SESSION['user'],$_SESSION['pass']);
 			if (!$_SESSION['conectado']){
 				header ('Location: autentificacion.php');		// Directivas de Seguridad
 			} 
+			
 			$pagina= 'listadoventa.php';
 			$siguiente = 'listadoventa.php';
 			generarventa($pagina,$siguiente);
-		if (isset($_POST['isbn0'])){
-			if (isset($_POST['Addrow'])){
-				$boton = array_keys($_POST);
-				$index = encontrarboton($boton);				// Confirmacion del libro elegido //
-				$index = $index + 1000;
-				asociarventa($index);
-				$_SESSION['filas'] = $_SESSION['filas'] + 1;
+			
+			if (isset($_POST['isbn0'])){
+				if (isset($_POST['Addrow'])){
+					$boton = array_keys($_POST);
+					$index = encontrarboton($boton);				// Confirmacion del libro elegido //
+					$index = $index + 1000;
+					asociarventa($index);
+					$_SESSION['filas'] = $_SESSION['filas'] + 1;
+				}
 			}
-		}
+			
 		?>
 		</table>
 		<h3>Listado de Venta</h3>
@@ -78,18 +80,21 @@ echo '<br/>';
 				echo '</tr>';
 				$pos = $pos + 1;
 			}
+			
 			if (isbnrepetido($_SESSION['isbn' . $pos])) { 
 				// Bloquear venta por libro repetido
 				echo '<br/>';
 				echo '<h3>El libro esta repetido vuelva a repetir la venta</h3>';  
 				echo '<br/>';
 			}
+			
 		?>
 		</table>
 		<?PHP
 			if ($_SESSION['filas'] == $pos){
 				$pos = $pos - 1;
 			}
+		
 			if (!isbnrepetido($_SESSION['isbn' . $pos])){  		// Arreglar problema de Inidices
 				echo '<form action = "imprimir.php" method = "post">';
 				echo '<input name = "vender" type = "submit" value ="Confirmar"/>';
@@ -98,6 +103,7 @@ echo '<br/>';
 			}else {
 				echo '<a href = "admin.php">Volver</a>';
 			}
+		
 			mysql_close($_SESSION['link']);
 		?>
 		</div>
